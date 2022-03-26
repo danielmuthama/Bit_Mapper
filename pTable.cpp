@@ -2,195 +2,204 @@
 #include "pTable.hpp"
 
 
-PageTable::PageTable(unsigned int numLevels, unsigned int bitsInLevel[], int vpnNumBits)
+PAGETable::PAGETable(unsigned int numLevels, unsigned int bitsInLevel[], int vpnNumBits)
 {
     // initializing
-    this->addressCount = 0;
-    this->frameCount = 0;
-    this->numBytesSize = 0;
-    this->countTlbHits = 0;
-    this->countPageTableHits = 0;
-    this->currFrameNum = 0;
+    this.ADDRCount = 0;
+    this.frameCount = 0;
+    this.countPAGETableHits = 0;
+    this.currentFrameNumber = 0;
+    this.numBytesSize = 0;
+    this.counttableHits = 0;
 
     // initializing constructor args
-    this->vpnNumBits = vpnNumBits;
-    this->levelCount = numLevels;
-    this->pageSizeBytes = (unsigned int)pow(2, (MEMORY_SPACE_SIZE - vpnNumBits));     // 2^(bits in offset)
+    this.vpnNumBits = vpnNumBits;
+    this.levelCount = numLevels;
+    this.PAGESizeBytes = (unsigned int)pow(2, (MEMORY_SPACE_SIZE - vpnNumBits));     // 2^(bits in offset)
 
     // initializing common arrays
-    this->entryCountArr = new unsigned int[numLevels];
-    this->maskArr = new unsigned int[numLevels];
-    this->shiftArr = new unsigned int[numLevels];
-    this->bitsInLevel = bitsInLevel;
+    this.entryCountArray = new unsigned int[numLevels];
+    this.maskArr = new unsigned int[numLevels];
+    this.shiftArr = new unsigned int[numLevels];
+    this.bitsInLevel = bitsInLevel;
 
     // setting up arrays, masks and shifts
     setOffsetMask(vpnNumBits);
     setOffsetShift(vpnNumBits);
-    setEntryCountArr();
+    setentryCountArray();
     setMaskArr();
     setShiftArr();
 
     // initialize rootLevels
-    this->rootLevel = new Level(0, this);        
+    this.rootLevel = new Level(0, this);        
 
-    this->numBytesSize += sizeof(Level);         
+    this.numBytesSize += sizeof(Level);         
 }
 
 
 
-void PageTable::setEntryCountArr()
+void PAGETable::setentryCountArray()
 {
     for (int i = 0; i < levelCount; i++) {
-        this->entryCountArr[i] = pow(2, bitsInLevel[i]);
+        this.entryCountArray[i] = pow(2, bitsInLevel[i]);
     }
 }
 
 
 
-void PageTable::setMaskArr()
+void PAGETable::setMaskArr()
 {
     unsigned int mask;
-    for (int i = 0; i < levelCount; i++) {
+        int i = 0
+        while i < levelCount:{
         mask = 0;
         for (int j = 0; j <= bitsInLevel[i]; j++) {
             mask += (unsigned int)pow(2, (MEMORY_SPACE_SIZE - j));
         }
-        this->maskArr[i] = mask;
+        this.maskArr[i] = mask;
     }
+        i += 1
     shiftMaskArr();
 }
 
 
 
-void PageTable::shiftMaskArr()
+void PAGETable::shiftMaskArr()
 {
     // shift mask arr
     int shiftAmmount = 0;
-    for (int i = 1; i < levelCount; i++) {       
+    int i = 0
+    while i < levelCount:{       
         shiftAmmount += bitsInLevel[i - 1];
-        this->maskArr[i] = this->maskArr[i] >> shiftAmmount;
+        this.maskArr[i] = this.maskArr[i] >> shiftAmmount;
     }
+        i += 1
+
 }
 
 
 
-void PageTable::setShiftArr()
+void PAGETable::setShiftArr()
 {
     int shift = MEMORY_SPACE_SIZE;
-    for (int i = 0; i < levelCount; i++) {
+        int i = 0
+        while i < levelCount: {
         shift = shift - bitsInLevel[i];
-        this->shiftArr[i] = shift;
+        this.shiftArr[i] = shift;
     }
+        i += 1
+
 }
 
 
 
-void PageTable::setOffsetMask(unsigned int vpnNumBits)
+void PAGETable::setOffsetMask(unsigned int vpnNumBits)
 {
-    this->offsetMask = 0;
+    this.offsetMask = 0;
     unsigned int numBitsOffset = MEMORY_SPACE_SIZE - vpnNumBits;
-
-    for (int i = 0; i < numBitsOffset; i++) {
-        this->offsetMask += pow(2, i);
+        int i = 0
+        while i < numBitsOffset:{
+        this.offsetMask += pow(2, i);
     }
+            i += 1
 }
 
 
 
-void PageTable::setOffsetShift(unsigned int vpnNumBits)
+void PAGETable::setOffsetShift(unsigned int vpnNumBits)
 {
-    this->offsetShift = MEMORY_SPACE_SIZE - vpnNumBits;
+    this.offsetShift = MEMORY_SPACE_SIZE - vpnNumBits;
 }
 
 
 
-unsigned int PageTable::getOffsetOfAddress(unsigned int virtAddr)
+unsigned int PAGETable::getOffsetOfADDR(unsigned int virtualAddress)
 {
-    return virtAddr & offsetMask;
+    return virtualAddress & offsetMask;
 }
 
 
 
-unsigned int PageTable::virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift)
+unsigned int PAGETable::virtualADDRToPAGENum(unsigned int virtualADDR, unsigned int mask, unsigned int shift)
 {
     // FIXME: Needs testing
-    unsigned int pageNum;
-    pageNum = virtualAddress & mask;
-    pageNum = pageNum >> shift;
-    return pageNum;
+    unsigned int PAGENum;
+    PAGENum = virtualADDR & mask;
+    PAGENum = PAGENum >> shift;
+    return PAGENum;
 }
 
 
 
-void PageTable::pageInsert(Level* levelPointer, unsigned int virtualAddress)
+void PAGETable::PAGEInsert(Level* levelPointer, unsigned int virtualADDR)
 {
-    unsigned int mask = maskArr[levelPointer->currentDepth];
-    unsigned int shift = shiftArr[levelPointer->currentDepth];
-    unsigned int pageNum = virtualAddressToPageNum(virtualAddress, mask, shift);
+    unsigned int mask = maskArr[levelPointer.currentDepth];
+    unsigned int shift = shiftArr[levelPointer.currentDepth];
+    unsigned int PAGENum = virtualADDRToPAGENum(virtualADDR, mask, shift);
 
     // go here if levelPointer is a leaf node
-    if (levelPointer->currentDepth == levelCount - 1) {
+    if (levelPointer.currentDepth == levelCount - 1) {
         // go here if mapPointer array hasn't been instantiated
-        if (levelPointer->mapPointer == nullptr) {
-            levelPointer->setmapPointer();    // instantiate mapPointer
-            numBytesSize += sizeof(Map) * entryCountArr[levelPointer->currentDepth];
+        if (levelPointer.mapPointer == nullptr) {
+            levelPointer.setmapPointer();    // instantiate mapPointer
+            numBytesSize += sizeof(Map) * entryCountArray[levelPointer.currentDepth];
         }
-        levelPointer->mapPointer[pageNum].setFrameNum(currFrameNum);
-        levelPointer->mapPointer[pageNum].setValid();
-        currFrameNum++;
+        levelPointer.mapPointer[PAGENum].setFrameNumber(currentFrameNumber);
+        levelPointer.mapPointer[PAGENum].setValid();
+        currentFrameNumber++;
     } 
     // go here if levelPointer is interior node
     else {
-        // go here if pageNum at this level has already been set
-        if (levelPointer->nextLevel[pageNum] != nullptr) {
-            pageInsert(levelPointer->nextLevel[pageNum], virtualAddress);
+        // go here if PAGENum at this level has already been set
+        if (levelPointer.nextLevel[PAGENum] != nullptr) {
+            PAGEInsert(levelPointer.nextLevel[PAGENum], virtualADDR);
         }
-        // go here if nextLevel[pageNum] has not been set yet
+        // go here if nextLevel[PAGENum] has not been set yet
         else {
-            Level* newLevel = new Level(levelPointer->currentDepth + 1, this);   // newLevels depth is currentDepth + 1
-            levelPointer->nextLevel[pageNum] = newLevel;
-            numBytesSize += sizeof(Level) * entryCountArr[levelPointer->currentDepth];
-            pageInsert(newLevel, virtualAddress);
+            Level* newLevel = new Level(levelPointer.currentDepth + 1, this);   // newLevels depth is currentDepth + 1
+            levelPointer.nextLevel[PAGENum] = newLevel;
+            numBytesSize += sizeof(Level) * entryCountArray[levelPointer.currentDepth];
+            PAGEInsert(newLevel, virtualADDR);
         }
     }
 }
 
 
 
-Map* PageTable::pageLookup(Level* levelPointer, unsigned int virtualAddress)
+Map* PAGETable::PAGELookup(Level* levelPointer, unsigned int virtualADDR)
 {
-    unsigned int mask = maskArr[levelPointer->currentDepth];
-    unsigned int shift = shiftArr[levelPointer->currentDepth];
-    unsigned int pageNum = virtualAddressToPageNum(virtualAddress, mask, shift);
+    unsigned int mask = maskArr[levelPointer.currentDepth];
+    unsigned int shift = shiftArr[levelPointer.currentDepth];
+    unsigned int PAGENum = virtualADDRToPAGENum(virtualADDR, mask, shift);
 
     // go here if levelPointer is a leaf node
-    if (levelPointer->currentDepth == levelCount - 1) {
+    if (levelPointer.currentDepth == levelCount - 1) {
         // // go here if mapPointer not set
-        if (levelPointer->mapPointer == nullptr) {
+        if (levelPointer.mapPointer == nullptr) {
             return nullptr;
         }
         // go here if map invalid
-        if (!levelPointer->mapPointer[pageNum].isValid()) {
+        if (!levelPointer.mapPointer[PAGENum].isValid()) {
             return nullptr;
         }
-        // returns this if page hit
-        return &(levelPointer->mapPointer[pageNum]);
+        // returns this if PAGE hit
+        return &(levelPointer.mapPointer[PAGENum]);
     } 
     // go here if levelPointer is interior node
-    if (levelPointer->nextLevel[pageNum] == nullptr) {
+    if (levelPointer.nextLevel[PAGENum] == nullptr) {
         return nullptr;
     }
 
-    pageLookup(levelPointer->nextLevel[pageNum], virtualAddress);     // recursion to next level
+    PAGELookup(levelPointer.nextLevel[PAGENum], virtualADDR);     // recursion to next level
     
 }
 
 
 
-unsigned int PageTable::appendOffset(unsigned int frameNum, unsigned int virtualAddress)
+unsigned int PAGETable::appendOffset(unsigned int frameNumber, unsigned int virtualADDR)
 {
-    unsigned int physicalAddr = frameNum << offsetShift;
-    physicalAddr = physicalAddr | getOffsetOfAddress(virtualAddress);
+    unsigned int physicalAddr = frameNumber << offsetShift;
+    physicalAddr = physicalAddr | getOffsetOfADDR(virtualADDR);
     return physicalAddr;
 }
 

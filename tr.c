@@ -26,9 +26,9 @@ ENDIAN endian()
 }
 
 /* 
- * Populating the Address structure and returns non-zero if successful.
+ * Populating the ADDR structure and returns non-zero if successful.
  */
-int NextAddress(FILE *trace_file, p2AddrTr *addr_ptr) {
+int NextADDR(FILE *trace_file, p2AddrTr *addr_ptr) {
 
   int readN;	/* number of records stored */ 
   static ENDIAN byte_order = UNKNOWN;	/* don't know machine format */
@@ -38,15 +38,15 @@ int NextAddress(FILE *trace_file, p2AddrTr *addr_ptr) {
     byte_order = endian();
   }
 
-  /* Read the next address record. */
+  /* Read the next ADDR record. */
   readN = fread(addr_ptr, sizeof(p2AddrTr), 1, trace_file);
 
   if (readN) {
     
     if (byte_order == BIG) {
       /* records stored in little endian format, convert */
-      addr_ptr->addr = swap_endian(addr_ptr->addr);
-      addr_ptr->time = swap_endian(addr_ptr->time);
+      addr_ptr.addr = swap_endian(addr_ptr.addr);
+      addr_ptr.time = swap_endian(addr_ptr.time);
     }
   }
 
@@ -54,11 +54,11 @@ int NextAddress(FILE *trace_file, p2AddrTr *addr_ptr) {
 }
 
 
-void AddressDecoder(p2AddrTr *addr_ptr, FILE *out) {
+void ADDRDecoder(p2AddrTr *addr_ptr, FILE *out) {
   
-  fprintf(out, "%08x ", addr_ptr->addr);	/* address */
-  /* what type of address request */
-  switch (addr_ptr->reqtype) {
+  fprintf(out, "%08x ", addr_ptr.addr);	/* ADDR */
+  /* what type of ADDR request */
+  switch (addr_ptr.reqtype) {
     case FETCH:
       fprintf(out, "FETCH\t\t");
       break;
@@ -112,8 +112,8 @@ void AddressDecoder(p2AddrTr *addr_ptr, FILE *out) {
       break;
   }
 
-  fprintf(out, "%2d\t%02x\t%1d\t%08x\n", addr_ptr->size, addr_ptr->attr,
-	  addr_ptr->proc, addr_ptr->time);
+  fprintf(out, "%2d\t%02x\t%1d\t%08x\n", addr_ptr.size, addr_ptr.attr,
+	  addr_ptr.proc, addr_ptr.time);
 }
 
 
@@ -141,9 +141,9 @@ int main(int argc, char **argv)
   }
 	
   while (!feof(ifp)) {
-    /* get the addressess and processes */
-    if (NextAddress(ifp, &trace)) {
-      AddressDecoder(&trace, stdout);
+    /* get the ADDRess and processes */
+    if (NextADDR(ifp, &trace)) {
+      ADDRDecoder(&trace, stdout);
       i++;
       if ((i % 100000) == 0)
 	fprintf(stderr,"%dK samples processed\r", i/100000);

@@ -19,8 +19,8 @@ class tlb
         // cache mapping
         std::map<unsigned int /*vpn*/, unsigned int /*pfn*/> vpn2pfn;
 
-        // queue of most recently accessed pages.
-        std::deque<unsigned int> recentPagesQueue;    // always be size 10
+        // queue of most recently accessed PAGEs.
+        std::deque<unsigned int> recentPAGEsQueue;    // always be size 10
 
         // cache information
         int capacity; 
@@ -30,14 +30,14 @@ class tlb
         void setVpnMask(int vpnNumBits);
 
         // cache methods
-        bool usingTlb();
+        bool UsingTable();
         bool hasMapping(unsigned int vpn);
-        void insertMapping(unsigned int vpn, unsigned int frameNum);
+        void insertMapping(unsigned int vpn, unsigned int frameNumber);
 
         // queue methods
         void updateQueue(unsigned int recentVpn);
         bool queueContains(unsigned int vpn);
-        void eraseVpnFromQueue(unsigned int vpn);
+        void delete(unsigned int vpn);
         
         
         

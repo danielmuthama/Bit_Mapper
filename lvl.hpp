@@ -6,18 +6,18 @@
 #include "Mapper.hpp"
 #include <math.h>
 
-class PageTable;  
+class PAGETable;  
 
 class Level
 {
     public:
 // setting up a default constructor
         Level();    
-        Level(int, PageTable*);    
+        Level(int, PAGETable*);    
         Level** nextLevel;        
         Map* mapPointer;                
         unsigned int currentDepth;     
-        PageTable* p_Table;          
+        PAGETable* p_Table;          
         void setNextLevel();        
         void setNextLevelNull();    
         void setmapPointer();          

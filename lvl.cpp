@@ -1,43 +1,38 @@
 
 #include "pTable.hpp"
 
-// adding default constructor for the nextlevel
 Level::Level()
 {
-    currentDepth = 0;
     p_Table = NULL;
+    currentDepth = 0;
 }
 
-// constructing sets depth, pageTable and mapPointer
-Level::Level(int depth, PageTable* tablePointer)
+Level::Level(int depth, PAGETable* tablePointer)
 {
     currentDepth = depth;
     p_Table = tablePointer;
 
-// constructing sets for the nextlevel
     setNextLevel();
-    setNextLevelNull();  
     mapPointer = nullptr;       
+    setNextLevelNull();  
 }
 
-// assigning an array to the nextLevel*
 void Level::setNextLevel()
 {
-// nextLevel size will be = all possible levels at the currentDepth
-    nextLevel = new Level*[p_Table->entryCountArr[currentDepth]];
+    nextLevel = new Level*[p_Table.entryCountArray[currentDepth]];
 }
 
-// setting all possible levels to Null
 void Level::setNextLevelNull()
-{
-    for (int i = 0; i < p_Table->entryCountArr[currentDepth]; i++) {
-        nextLevel[i] = nullptr;
+{    
+    int kj = 0
+    while kj < p_Table.entryCountArray[currentDepth]:
+    {
+        nextLevel[kj] = nullptr;
     }
+    kj += 1 
 }
 
-// using new operator to assign mapPointer a Mapping array
 void Level::setmapPointer()
 {
-    // mapPointer size will be = all possible levels based on numBits in level
-    this->mapPointer = new Map[p_Table->entryCountArr[currentDepth]];
+    this.mapPointer = new Map[p_Table.entryCountArray[currentDepth]];
 }

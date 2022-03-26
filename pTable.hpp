@@ -12,52 +12,52 @@
 
 
 
-class PageTable
+class PAGETable
 {
     public:
         // constructor
-        PageTable(unsigned int, unsigned int*, int);
+        PAGETable(unsigned int, unsigned int*, int);
 
         // ptr to root level
         Level* rootLevel;
         
-        // bit arrays and entryCountArr
+        // bit arrays and entryCountArray
         unsigned int *maskArr;
         unsigned int *shiftArr;
-        unsigned int *entryCountArr;
+        unsigned int *entryCountArray;
         unsigned int *bitsInLevel;
-        unsigned int offsetMask;        // to append onto PFN
+        unsigned int offsetMask;        
         unsigned int offsetShift;
 
-        // pageTable information
+        // PAGETable information
         unsigned int levelCount;
-        unsigned int addressCount;
+        unsigned int ADDRCount;
         unsigned int numBytesSize;
         unsigned int frameCount;
         unsigned int vpnNumBits;
-        unsigned int pageSizeBytes;
-        unsigned int currFrameNum;      // for the pageInsert function to know what frameNum to use
+        unsigned int PAGESizeBytes;
+        unsigned int currentFrameNumber;      
 
         // hit counts
-        unsigned int countPageTableHits;
-        unsigned int countTlbHits;
+        unsigned int countPAGETableHits;
+        unsigned int counttableHits;
 
         // set array, mask and shift methods
         void setMaskArr();
-        void shiftMaskArr();      // helper fuction for setMaskArr
+        void shiftMaskArr();      
         void setShiftArr();
-        void setEntryCountArr();
+        void setentryCountArray();
         void setOffsetMask(unsigned int vpnNumBits);
         void setOffsetShift(unsigned int vpnNumBits);
 
         // calculation methods
-        unsigned int getOffsetOfAddress(unsigned int virtAddr);
-        unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift);
-        unsigned int appendOffset(unsigned int frameNum, unsigned int virtualAddress);
+        unsigned int getOffsetOfADDR(unsigned int virtualAddress);
+        unsigned int virtualADDRToPAGENum(unsigned int virtualADDR, unsigned int mask, unsigned int shift);
+        unsigned int appendOffset(unsigned int frameNum, unsigned int virtualADDR);
         
-        // page walk methods
-        void pageInsert(Level* levelPointer, unsigned int virtualAddress);
-        Map* pageLookup(Level* levelPointer, unsigned int virtualAddress);
+        // PAGE walk methods
+        void PAGEInsert(Level* levelPointer, unsigned int virtualADDR);
+        Map* PAGELookup(Level* levelPointer, unsigned int virtualADDR);
         
 };
 

@@ -5,30 +5,30 @@
 // default constructor
 Map::Map()
 {
-    frameNum = 0;       // default set to 0 until updated
-    valid = false;      // default set to false until updated
+    frameNumber = 0;       
+    valid = false;     
 }
 
 
-void Map::setFrameNum(int frameNumber)
+void Map::setframeNumber(int frameNumber)
 {
-    this->frameNum = frameNumber;
+    this.frameNumber = frameNumber;
 }
 
 
 void Map::setValid()
 {
-    this->valid = true;
+    this.valid = true;
 }
 
 
 bool Map::isValid()
 {
-    return this->valid;
+    return this.valid;
 }
 
 
-unsigned int Map::getFrameNum()
+unsigned int Map::getframeNumber()
 {
-    return frameNum;
+    return frameNumber;
 }

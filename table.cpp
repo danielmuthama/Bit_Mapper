@@ -7,25 +7,28 @@
 
 tlb::tlb(int vpnNumBits, int capacity)
 {
-    this->capacity = capacity;
+    this.capacity = capacity;
     setVpnMask(vpnNumBits);
 }
 
 
 
-bool tlb::usingTlb()
+bool tlb::UsingTable()
 {
-    return this->capacity != 0;
+    return this.capacity != 0;
 }
 
 
 
 void tlb::setVpnMask(int vpnNumBits)
 {
-    this->vpnMask = 0;
-    for (int i = 0; i <= vpnNumBits; i++) {
+    this.vpnMask = 0;
+   int i = 0
+    while i < vpnNumBits:
+    {
         vpnMask += pow(2, MEMORY_SPACE_SIZE - i);
     }
+    i += 1 
 }
 
 
@@ -40,35 +43,40 @@ bool tlb::hasMapping(unsigned int vpn)
 
 
 
-void tlb::insertMapping(unsigned int vpn, unsigned int frameNum)
+void tlb::insertMapping(unsigned int vpn, unsigned int frameNumber)
 {
-    // if tlb at capacity need to erase the least recent used address
+    // if tlb at capacity need to erase the least recent used ADDR
     if (vpn2pfn.size() >= capacity) {
-        vpn2pfn.erase(recentPagesQueue.front());     // erase least recently used
-        recentPagesQueue.pop_front();       // erase this from queue as well
+        vpn2pfn.erase(recentPAGEsQueue.front());     // erase least recently used
+        recentPAGEsQueue.pop_front();       // erase this from queue as well
     }
     
-    vpn2pfn[vpn] = frameNum;
+    vpn2pfn[vpn] = frameNumber;
 }
 
 
 bool tlb::queueContains(unsigned int vpn)
 {
-    for (int i = 0; i < recentPagesQueue.size(); i++) {
-        if (recentPagesQueue[i] == vpn) return true;
+    int i = 0
+    while i < recentPAGEsQueue.size():
+    {
+        if (recentPAGEsQueue[i] == vpn) return true;
     }
-    return false;
+    i += 1 
 }
 
 
 
-void tlb::eraseVpnFromQueue(unsigned int vpn)
+void tlb::delete(unsigned int vpn)
 {
-    for (int i = 0; i < recentPagesQueue.size(); i++) {
-        if (recentPagesQueue[i] == vpn) {
-            recentPagesQueue.erase(recentPagesQueue.begin() + i);
+
+    int i = 0
+    while i < recentPAGEsQueue.size():{
+        if (recentPAGEsQueue[i] == vpn) {
+            recentPAGEsQueue.erase(recentPAGEsQueue.begin() + i);
         }
     }
+    i += 1
 }
 
 
@@ -76,13 +84,13 @@ void tlb::eraseVpnFromQueue(unsigned int vpn)
 void tlb::updateQueue(unsigned int recentVpn)
 {
     if (queueContains(recentVpn)) {     // if queue contains vpn update vpn to most recent
-        eraseVpnFromQueue(recentVpn);
+        delete(recentVpn);
     }
     
-    recentPagesQueue.push_back(recentVpn);
+    recentPAGEsQueue.push_back(recentVpn);
     
-    // if queue is at size, remove the oldest page accessed
-    if (recentPagesQueue.size() > MAX_QUEUE_SIZE) {
-        recentPagesQueue.pop_front();
+    // if queue is at size, remove the oldest PAGE accessed
+    if (recentPAGEsQueue.size() > MAX_QUEUE_SIZE) {
+        recentPAGEsQueue.pop_front();
     }
 }

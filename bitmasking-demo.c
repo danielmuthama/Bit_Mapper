@@ -1,32 +1,18 @@
 #include <stdio.h>
 
 int main(int argc, char **argv) {
-
-  int	Page;
-  
-  /* The three level page table will be:
-   * Level 0:  4 bits
-   * Level 1:  8 bits
-   * Level 2:  8 bits
-   * offset bits will be computed as follows 32 - (4 + 8 + 8) = 12 bits
-   * page size will be 2^12 = 4096 bytes
-   */
-
-  int	Address = 0xFe98f982;
-
- 
-  int	Mask = 0x0FF00000;
+  int	ADDR = 0xFe96f962;
+  int	PAGE;
+  int	MASK = 0x0FF00000;
 
 
-  printf("Address:\t0x%08x (%d decimal)\n", Address, Address);
+  printf("ADDR:\t0x%08x (%d decimal)\n", ADDR, ADDR);
 
-  /* Pulling out all the relevant bits in bitwise manner */
 
-  Page = Mask & Address;
-  printf("ON masking:\t0x%08x\n", Page);
+  PAGE = ADDR & MASK;
+  printf("ON MASKing:\t0x%08x\n", PAGE);
 
-  /* Shifting right all the relevant number of bits */
-  Page = Page >> 20;
+  PAGE = PAGE >> 30;
 
-  printf("Page NUM = 0x%x\n", Page);
+  printf("PAGE NUM = 0x%x\n", PAGE);
 }
