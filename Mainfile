@@ -1,0 +1,31 @@
+CXX=g++
+# Making instant variables for the compiler options
+CXXFLAGS=-std=c++11
+
+
+pagingwithtlb : main.o pageTable.o Map.o level.o tlb.o tracereader.o output_mode_helpers.o
+	$(CXX) $(CXXFLAGS) -g -o pagingwithtlb $^
+
+main.o : main.cpp
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+pageTable.o : pageTable.cpp pageTable.hpp
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+Map.o : Map.cpp Map.hpp
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+level.o : level.cpp level.hpp
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+tlb.o : tlb.cpp tlb.hpp
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+tracereader.o : tracereader.c tracereader.h
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+output_mode_helpers.o : output_mode_helpers.c output_mode_helpers.h
+	$(CXX) $(CXXFLAGS) -g -c $<
+
+clean :
+	rm -f *.o
